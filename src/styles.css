@@ -1,0 +1,50 @@
+/* Inline quote styling that disables callout styles */
+.inline-quote {
+  /* Reset callout styles */
+  border-left: none;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  
+  /* Display on a new line in source mode */
+  display: block;
+  
+  /* Minimal styling to distinguish inline quotes */
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* In live preview and reading view, display inline */
+.markdown-preview-view .inline-quote,
+.markdown-rendered .inline-quote {
+  display: inline;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Hide the block ID in reading view but keep it functional */
+.markdown-preview-view .inline-quote .block-id,
+.markdown-rendered .inline-quote .block-id {
+  display: none;
+}
+
+/* In source mode, ensure the inline quote appears on its own line */
+.markdown-source-view .inline-quote {
+  display: block;
+}
+
+/* Style for the inline-quote callout specifically */
+.markdown-preview-view blockquote.inline-quote,
+.markdown-source-view blockquote.inline-quote {
+  border-left: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.markdown-preview-view blockquote.inline-quote p,
+.markdown-source-view blockquote.inline-quote p {
+  margin: 0;
+  display: inline;
+}

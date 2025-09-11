@@ -1,15 +1,17 @@
-import { BuildOptions } from 'esbuild';
+import esbuild from 'esbuild';
+import process from 'process';
 
-const config: BuildOptions = {
+// Check if we're in production mode
+const isProduction = process.argv.includes('production');
+
+esbuild.build({
   entryPoints: ['src/main.ts'],
   bundle: true,
-  minify: process.env.NODE_ENV === 'production',
-  sourcemap: process.env.NODE_ENV === 'development',
+  minify: isProduction,
+  sourcemap: !isProduction,
   format: 'cjs',
   outfile: 'main.js',
   external: ['obsidian'],
   platform: 'node',
   logLevel: 'info',
-};
-
-export default config;
+}).catch(() => process.exit(1));

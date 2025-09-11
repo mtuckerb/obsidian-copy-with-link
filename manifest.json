@@ -6,5 +6,6 @@
   "author": "Your Name",
   "description": "A plugin to copy highlighted text with a link to the original file/line",
   "minAppVersion": "0.15.0",
-  "isDesktopOnly": false
+  "isDesktopOnly": false,
+  "styles": "styles.css"
 }
