@@ -1,7 +1,7 @@
 {
   "id": "copy-with-link",
   "name": "Copy with Link",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "main.js",
   "author": "M. Tucker Bradford",
   "description": "A plugin to copy highlighted text with a link to the original file/line",
