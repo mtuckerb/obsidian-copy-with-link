@@ -1,6 +1,6 @@
 {
   "name": "obsidian-copy-with-link",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An Obsidian plugin to copy highlighted text with a link to the original file/line",
   "main": "main.js",
   "scripts": {
