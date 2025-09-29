@@ -13,7 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
@@ -35,12 +34,17 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Plugin version: $VERSION"
 
+
       - name: Create release tag
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag -f "v${{ steps.version.outputs.version }}"
-          git push -f origin "v${{ steps.version.outputs.version }}"
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "ref": "refs/tags/v${{ steps.version.outputs.version }}",
+              "sha": "'${{ github.sha }}'"
+            }' \
+            https://api.github.com/repos/${{ github.repository }}/git/refs
 
       - name: Create GitHub release
         uses: actions/create-release@v1
@@ -54,13 +58,16 @@ jobs:
 
             This is an automated release for BRAT (Beta Reviewer's Auto-update Tool).
 
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.version.outputs.version }}...HEAD
-
             ## Installation
 
             1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat)
             2. Add this repository to BRAT: `${{ github.repository }}`
             3. Enable the plugin in Obsidian settings
+
+            ## Recent Changes
+            - Fixed cursor manipulation logic to replace selected text in place
+            - Updated CSS styling for natural highlighted text appearance
+            - Added automated BRAT release workflow
           draft: false
           prerelease: false
 
