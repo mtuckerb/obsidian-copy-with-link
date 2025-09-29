@@ -39,47 +39,44 @@ jobs:
 
 
       - name: Build plugin
-        run: npm run build
-
-      - name: Manual release creation
         run: |
-          echo "To create releases for BRAT:"
-          echo "1. Build the plugin: npm run build"
-          echo "2. Create a git tag: git tag v${{ steps.version.outputs.version }}"
-          echo "3. Push the tag: git push origin v${{ steps.version.outputs.version }}"
-          echo "4. Go to GitHub and create a release referencing the tag"
-          echo "5. Upload main.js, manifest.json, and styles.css as release assets"
-          echo ""
-          echo "Version: ${{ steps.version.outputs.version }}"
-          echo "Repository: ${{ github.repository }}"
-          ls -la *.js *.json *.css
+          echo "Current directory: $(pwd)"
+          echo "Contents before build:"
+          ls -la
+          npm run build
+          echo "Contents after build:"
+          ls -la
 
-      - name: Upload main.js
-        uses: actions/upload-release-asset@v1
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./main.js
-          asset_name: main.js
-          asset_content_type: application/javascript
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            main.js
+            manifest.json
+            styles.css
+        continue-on-error: true
 
-      - name: Upload manifest.json
-        uses: actions/upload-release-asset@v1
+      - name: Create Release with PAT (fallback)
+        id: create_release_pat
+        if: failure()
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./manifest.json
-          asset_name: manifest.json
-          asset_content_type: application/json
-
-      - name: Upload styles.css
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./styles.css
-          asset_name: styles.css
-          asset_content_type: text/css
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            main.js
+            manifest.json
+            styles.css
