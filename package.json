@@ -12,7 +12,7 @@
     "obsidian",
     "obsidian-plugin"
   ],
-  "author": "Your Name",
+  "author": "M. Tucker Bradford",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.11.6",

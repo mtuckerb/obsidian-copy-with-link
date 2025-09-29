@@ -1,50 +1,57 @@
-/* Inline quote styling that disables callout styles */
+/* Inline quote styling that looks like natural highlighted text */
 .inline-quote {
-  /* Reset callout styles */
-  border-left: none;
-  border-radius: 0;
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  
-  /* Display on a new line in source mode */
-  display: block;
-  
-  /* Minimal styling to distinguish inline quotes */
-  font-style: italic;
-  color: var(--text-muted);
-}
+  /* Make it look like highlighted text */
+  background-color: var(--background-modifier-accent);
+  color: var(--text-normal);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: inherit;
+  font-style: inherit;
 
-/* In live preview and reading view, display inline */
-.markdown-preview-view .inline-quote,
-.markdown-rendered .inline-quote {
+  /* Ensure it flows naturally inline */
   display: inline;
-  font-style: italic;
-  color: var(--text-muted);
+  border: none;
+  box-shadow: none;
 }
 
-/* Hide the block ID in reading view but keep it functional */
+/* Ensure consistent styling across all views */
+.markdown-preview-view .inline-quote,
+.markdown-rendered .inline-quote,
+.markdown-source-view .inline-quote {
+  display: inline;
+  background-color: var(--background-modifier-accent);
+  color: var(--text-normal);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: inherit;
+  font-style: inherit;
+  border: none;
+  box-shadow: none;
+}
+
+/* Hide the block ID but keep it functional */
 .markdown-preview-view .inline-quote .block-id,
-.markdown-rendered .inline-quote .block-id {
+.markdown-rendered .inline-quote .block-id,
+.markdown-source-view .inline-quote .block-id {
   display: none;
 }
 
-/* In source mode, ensure the inline quote appears on its own line */
-.markdown-source-view .inline-quote {
-  display: block;
-}
-
-/* Style for the inline-quote callout specifically */
+/* Ensure the blockquote wrapper doesn't interfere */
 .markdown-preview-view blockquote.inline-quote,
 .markdown-source-view blockquote.inline-quote {
-  border-left: none;
+  border: none;
   background-color: transparent;
   padding: 0;
   margin: 0;
+  display: inline;
 }
 
 .markdown-preview-view blockquote.inline-quote p,
 .markdown-source-view blockquote.inline-quote p {
   margin: 0;
   display: inline;
+  background-color: var(--background-modifier-accent);
+  color: var(--text-normal);
+  padding: 2px 4px;
+  border-radius: 3px;
 }
