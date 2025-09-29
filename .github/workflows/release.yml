@@ -38,31 +38,21 @@ jobs:
           echo "Plugin version: $VERSION"
 
 
-      - name: Create release tag and release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: Release v${{ steps.version.outputs.version }}
-          body: |
-            ## Changes
+      - name: Build plugin
+        run: npm run build
 
-            This is an automated release for BRAT (Beta Reviewer's Auto-update Tool).
-
-            ## Installation
-
-            1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat)
-            2. Add this repository to BRAT: `${{ github.repository }}`
-            3. Enable the plugin in Obsidian settings
-
-            ## Recent Changes
-            - Fixed cursor manipulation logic to replace selected text in place
-            - Updated CSS styling for natural highlighted text appearance
-            - Added automated BRAT release workflow
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Manual release creation
+        run: |
+          echo "To create releases for BRAT:"
+          echo "1. Build the plugin: npm run build"
+          echo "2. Create a git tag: git tag v${{ steps.version.outputs.version }}"
+          echo "3. Push the tag: git push origin v${{ steps.version.outputs.version }}"
+          echo "4. Go to GitHub and create a release referencing the tag"
+          echo "5. Upload main.js, manifest.json, and styles.css as release assets"
+          echo ""
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "Repository: ${{ github.repository }}"
+          ls -la *.js *.json *.css
 
       - name: Upload main.js
         uses: actions/upload-release-asset@v1
