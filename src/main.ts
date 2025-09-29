@@ -78,7 +78,7 @@ export default class CopyWithLinkPlugin extends Plugin {
       )
 
       // Create the callout with highlighted text
-      const callout = `> [!inline-quote] ${highlightedText}\n> ^${uniqueId}`
+      const callout = `> [!inline-quote]+\n${highlightedText}\n> ^${uniqueId}`
 
       replacements.push({
         paragraph,
@@ -228,25 +228,39 @@ export default class CopyWithLinkPlugin extends Plugin {
         ) {
           // Selection is entirely on this line
           const before = line.substring(0, selectionRange.from.ch)
-          const selected = line.substring(
-            selectionRange.from.ch,
-            selectionRange.to.ch
-          )
+          const selected = line
+            .substring(selectionRange.from.ch, selectionRange.to.ch)
+            .trim()
           const after = line.substring(selectionRange.to.ch)
-          result.push(before + "==" + selected + "==" + after)
+          const spaceBefore =
+            before.endsWith(" ") || selected.startsWith(" ") ? "" : " "
+          const spaceAfter =
+            after.startsWith(" ") || selected.endsWith(" ") ? "" : " "
+          result.push(
+            before + spaceBefore + "==" + selected + "==" + spaceAfter + after
+          )
         } else if (lineNum === selectionRange.from.line) {
           // First line of multi-line selection
           const before = line.substring(0, selectionRange.from.ch)
-          const selected = line.substring(selectionRange.from.ch)
-          result.push(before + "==" + selected + "==")
+          const selected = line.substring(selectionRange.from.ch).trim()
+          const spaceBefore =
+            before.endsWith(" ") || selected.startsWith(" ") ? "" : " "
+          result.push(before + spaceBefore + "==" + selected + "==")
         } else if (lineNum === selectionRange.to.line) {
           // Last line of multi-line selection
-          const selected = line.substring(0, selectionRange.to.ch)
+          const selected = line.substring(0, selectionRange.to.ch).trim()
           const after = line.substring(selectionRange.to.ch)
-          result.push("==" + selected + "==" + after)
+          const spaceAfter =
+            after.startsWith(" ") || selected.endsWith(" ") ? "" : " "
+          result.push("==" + selected + "==" + spaceAfter + after)
         } else {
-          // Middle line of multi-line selection
-          result.push("==" + line + "==")
+          // Middle line of multi-line selection - trim and add proper spacing
+          const trimmedLine = line.trim()
+          const spaceBefore =
+            line !== trimmedLine && line.startsWith(" ") ? " " : ""
+          const spaceAfter =
+            line !== trimmedLine && line.endsWith(" ") ? " " : ""
+          result.push(spaceBefore + "==" + trimmedLine + "==" + spaceAfter)
         }
       }
 
@@ -269,16 +283,27 @@ export default class CopyWithLinkPlugin extends Plugin {
         } else if (lineNum === selectionRange.from.line) {
           // First line of selection in this paragraph
           const before = line.substring(0, Math.max(0, selectionRange.from.ch))
-          const selected = line.substring(Math.max(0, selectionRange.from.ch))
-          result.push(before + "==" + selected + "==")
+          const selected = line
+            .substring(Math.max(0, selectionRange.from.ch))
+            .trim()
+          const spaceBefore =
+            before.endsWith(" ") || selected.startsWith(" ") ? "" : " "
+          result.push(before + spaceBefore + "==" + selected + "==")
         } else if (lineNum === selectionRange.to.line) {
           // Last line of selection in this paragraph
-          const selected = line.substring(0, selectionRange.to.ch)
+          const selected = line.substring(0, selectionRange.to.ch).trim()
           const after = line.substring(selectionRange.to.ch)
-          result.push("==" + selected + "==" + after)
+          const spaceAfter =
+            after.startsWith(" ") || selected.endsWith(" ") ? "" : " "
+          result.push("==" + selected + "==" + spaceAfter + after)
         } else {
-          // Middle line of multi-paragraph selection
-          result.push("==" + line + "==")
+          // Middle line of multi-paragraph selection - trim and add proper spacing
+          const trimmedLine = line.trim()
+          const spaceBefore =
+            line !== trimmedLine && line.startsWith(" ") ? " " : ""
+          const spaceAfter =
+            line !== trimmedLine && line.endsWith(" ") ? " " : ""
+          result.push(spaceBefore + "==" + trimmedLine + "==" + spaceAfter)
         }
       }
 
